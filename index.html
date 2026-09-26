@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SH DONAT TJ</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d0d11;
+            --card-bg: #16161e;
+            --card-border: #232330;
+            --accent-orange: #ff7a00;
+            --text-main: #ffffff;
+            --text-sub: #8a8a9e;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 12px;
+            padding-bottom: 70px;
+            box-sizing: border-box;
+        }
+
+        /* Header / Balance */
+        .user-card {
+            background: linear-gradient(135deg, #1c1c28, #12121a);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .balance-title {
+            font-size: 11px;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .balance-value {
+            font-size: 26px;
+            font-weight: 800;
+            margin: 4px 0 12px 0;
+        }
+
+        .balance-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 8px;
+            background: #20202c;
+            border: 1px solid #2d2d3f;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Banner Categories */
+        .section-title {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin: 16px 0 10px 0;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .game-banner {
+            position: relative;
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            border: 1px solid var(--card-border);
+            cursor: pointer;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            padding-left: 16px;
+        }
+
+        .game-banner-title {
+            font-size: 20px;
+            font-weight: 900;
+            z-index: 2;
+        }
+
+        .game-banner-sub {
+            font-size: 11px;
+            color: var(--accent-orange);
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        /* Diamond Grid */
+        .grid-products {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .prod-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .prod-card.active {
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 12px rgba(255, 122, 0, 0.2);
+        }
+
+        .prod-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .prod-price {
+            font-size: 13px;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        /* Input */
+        .input-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .input-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #121218;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: var(--text-sub);
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--accent-orange);
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- Страница Асосӣ -->
+    <div id="page-main" class="page active">
+        <div class="user-card">
+            <div class="balance-title">БАЛАНС</div>
+            <div class="balance-value">0.00 <span style="font-size: 16px; color: var(--text-sub);">см</span></div>
+            <div class="balance-btns">
+                <button class="btn-action">+ Пур кардан</button>
+                <button class="btn-action">↗ Баровардан</button>
+            </div>
+        </div>
+
+        <div class="section-title">Категорияҳо</div>
+
+        <div class="game-banner" onclick="openGame('Free Fire СНГ')">
+            <div>
+                <div class="game-banner-title">FREE FIRE<br><span style="color: #fff;">СНГ</span></div>
+                <div class="game-banner-sub">Харидан ➔</div>
+            </div>
+        </div>
+
+        <div class="game-banner" onclick="openGame('Free Fire Индонезия')">
+            <div>
+                <div class="game-banner-title">FREE FIRE<br><span style="color: #fff;">ИНДОНЕЗИЯ</span></div>
+                <div class="game-banner-sub">Харидан ➔</div>
+            </div>
+        </div>
+
+        <div class="game-banner" onclick="openGame('PUBG Mobile UC')">
+            <div>
+                <div class="game-banner-title">PUBG MOBILE<br><span style="color: #fff;">UC</span></div>
+                <div class="game-banner-sub">Харидан ➔</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница Покупки -->
+    <div id="page-buy" class="page">
+        <div style="font-weight: bold; margin-bottom: 12px; cursor: pointer;" onclick="showPage('page-main')">← Бозгашт</div>
+        <h3 id="game-title" style="color: var(--accent-orange); margin-top:0;"></h3>
+
+        <div class="grid-products">
+            <div class="prod-card" onclick="selectItem('30 Алмазҳо', '4.00 см', this)">
+                <div class="prod-title">💎 30 Алмазҳо</div>
+                <div class="prod-price">4.00 см</div>
+            </div>
+            <div class="prod-card" onclick="selectItem('50 Алмазҳо', '6.80 см', this)">
+                <div class="prod-title">💎 50 Алмазҳо</div>
+                <div class="prod-price">6.80 см</div>
+            </div>
+            <div class="prod-card" onclick="selectItem('100 Алмазҳо', '13.50 см', this)">
+                <div class="prod-title">💎 100 Алмазҳо</div>
+                <div class="prod-price">13.50 см</div>
+            </div>
+            <div class="prod-card" onclick="selectItem('210 Алмазҳо', '27.00 см', this)">
+                <div class="prod-title">💎 210 Алмазҳо</div>
+                <div class="prod-price">27.00 см</div>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <input type="number" id="player-id" placeholder="ID-и бозиро ворид кунед" oninput="checkOrder()">
+        </div>
+    </div>
+
+    <!-- Навигация -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="showPage('page-main')">🏠<br>Асосӣ</div>
+        <div class="nav-item" onclick="alert('Бахши харидҳо')">🛍️<br>Харидҳо</div>
+        <div class="nav-item" onclick="alert('Бахши дастгирӣ')">🎧<br>Дастгирӣ</div>
+        <div class="nav-item" onclick="alert('Профил')">👤<br>Профил</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let currentGame = '';
+        let selectedProduct = null;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if(pageId === 'page-main') tg.MainButton.hide();
+        }
+
+        function openGame(gameName) {
+            currentGame = gameName;
+            document.getElementById('game-title').innerText = gameName;
+            showPage('page-buy');
+        }
+
+        function selectItem(name, price, el) {
+            document.querySelectorAll('.prod-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selectedProduct = { name, price };
+            checkOrder();
+        }
+
+        function checkOrder() {
+            const id = document.getElementById('player-id').value;
+            if (selectedProduct && id.length >= 5) {
+                tg.MainButton.setText(`Пардохт кардан (${selectedProduct.price})`);
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
+        tg.onEvent('mainButtonClicked', function() {
+            const id = document.getElementById('player-id').value;
+            tg.sendData(JSON.stringify({
+                game: currentGame,
+                item: selectedProduct.name,
+                price: selectedProduct.price,
+                user_id: id
+            }));
+        });
+    </script>
+</body>
+</html>
