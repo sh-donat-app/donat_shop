@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamer Donat Store</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1e1e24;
+            --accent-color: #0088cc;
+            --text-color: #ffffff;
+            --text-secondary: #a0a0a0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: var(--card-bg);
+            border: 1px solid #333;
+            color: var(--text-color);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .category {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .category.active {
+            display: grid;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #2a2a32;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card.selected {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(0, 136, 204, 0.4);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .card-price {
+            font-size: 14px;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin-top: 20px;
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: #121214;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>🎮 Gamer Donat Store</h2>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('freefire')">Free Fire</button>
+        <button class="tab-btn" onclick="switchTab('pubg')">PUBG Mobile</button>
+    </div>
+
+    <!-- Free Fire -->
+    <div id="freefire" class="category active">
+        <div class="card" onclick="selectProduct('Free Fire', '100 Алмазов', '15 TJS', this)">
+            <div class="card-title">💎 100</div>
+            <div class="card-price">15 TJS</div>
+        </div>
+        <div class="card" onclick="selectProduct('Free Fire', '310 Алмазов', '42 TJS', this)">
+            <div class="card-title">💎 310</div>
+            <div class="card-price">42 TJS</div>
+        </div>
+        <div class="card" onclick="selectProduct('Free Fire', '520 Алмазов', '68 TJS', this)">
+            <div class="card-title">💎 520</div>
+            <div class="card-price">68 TJS</div>
+        </div>
+        <div class="card" onclick="selectProduct('Free Fire', '1060 Алмазов', '135 TJS', this)">
+            <div class="card-title">💎 1060</div>
+            <div class="card-price">135 TJS</div>
+        </div>
+    </div>
+
+    <!-- PUBG Mobile -->
+    <div id="pubg" class="category">
+        <div class="card" onclick="selectProduct('PUBG Mobile', '60 UC', '14 TJS', this)">
+            <div class="card-title">💵 60 UC</div>
+            <div class="card-price">14 TJS</div>
+        </div>
+        <div class="card" onclick="selectProduct('PUBG Mobile', '325 UC', '65 TJS', this)">
+            <div class="card-title">💵 325 UC</div>
+            <div class="card-price">65 TJS</div>
+        </div>
+        <div class="card" onclick="selectProduct('PUBG Mobile', '660 UC', '125 TJS', this)">
+            <div class="card-title">💵 660 UC</div>
+            <div class="card-price">125 TJS</div>
+        </div>
+        <div class="card" onclick="selectProduct('PUBG Mobile', '1800 UC', '330 TJS', this)">
+            <div class="card-title">💵 1800 UC</div>
+            <div class="card-price">330 TJS</div>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <label for="player-id">Введите ваш ID в игре:</label>
+        <input type="number" id="player-id" placeholder="Например: 123456789" oninput="validateForm()">
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        let selectedItem = null;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.category').forEach(cat => cat.classList.remove('active'));
+
+            if (tab === 'freefire') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('freefire').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('pubg').classList.add('active');
+            }
+        }
+
+        function selectProduct(game, name, price, element) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+
+            selectedItem = { game, name, price };
+            validateForm();
+        }
+
+        function validateForm() {
+            const playerId = document.getElementById('player-id').value.trim();
+
+            if (selectedItem && playerId.length >= 5) {
+                tg.MainButton.setText(`Оформить заказ (${selectedItem.price})`);
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
+        tg.onEvent('mainButtonClicked', function() {
+            const playerId = document.getElementById('player-id').value.trim();
+            const data = {
+                game: selectedItem.game,
+                item: selectedItem.name,
+                price: selectedItem.price,
+                user_id: playerId
+            };
+            tg.sendData(JSON.stringify(data));
+        });
+    </script>
+</body>
+</html>
